@@ -19,7 +19,7 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "DNS Based Digital Verifiable Credential Verification and Trust Registries"
+title: "DNS Based Digital Verifiable Credential Verification and Trust Registry Architecture"
 abbrev: "TODO - Abbreviation"
 category: info
 
