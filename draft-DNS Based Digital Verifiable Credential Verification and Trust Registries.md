@@ -19,7 +19,7 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
+title: "DNS Based Digital Verifiable Credential Verification and Trust Registries"
 abbrev: "TODO - Abbreviation"
 category: info
 
