@@ -24,10 +24,10 @@ venue:
 
 author:
  -
-    fullname: J.Latour
+    fullname: J.Carter
     organization: CIRA
  -
-    fullname: J.Carter
+    fullname: J.Latour
     organization: CIRA
  -
     fullname: M.Glaude
@@ -39,31 +39,28 @@ informative:
 
 --- abstract
 
-This memo describes an architecture for digital credential verification and validation using Decentralized Identifiers (DIDs), distributed ledgers, trust registries, and the DNS.
+This memo describes an architecture for digital credential verification and validation using Decentralized Identifiers (DIDs), distributed ledgers, trust registries, and the DNS. This architecture provides a verifier with a simple process by which to cryptographically verify the credential they are being presented with, verify and resolve the issuer of that credential to a domain, and verify that issuer's membership in a trust registry.
 
 --- middle
 
 # Introduction
 
-This memo describes an architecture for digital credential verification using distributed ledgers, the DNS, and trust registries.
+With the increasing adoption and deployment of digital credentials around the world, as well as the numerous different standards and implementations surrounding them, there is a strong likelyhood the digital credential ecosytem will become fragmented. This will present a significant burden to implementers accross different nations and organizations, creating large barriers to interoperability.
 
-The use case involves an individual or an organization receiving a verifiable credential [AnonCreds](https://hyperledger.github.io/anoncreds-spec/) [W3C](https://www.w3.org/TR/vc-data-model/) from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it on a distributed ledger to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, verifying the issuer's domain name and public key through DNS queries using URI and TLSA records, and finally verifying the issuer through a trust registry rooted in the DNS using URI and TLSA records, while ensuring  all these DNS records are properly signed and validated with DNSSEC.
+This memo aims to improve global interoperability between different decentralized digital identity ecosystems by ensuring that credential issuers have unique and accessable identifiers globally. The memo also aims to demonstrate how trust registries can enable global interoperability by providing a layer of digital trust in the use of digital credentials and demonstrate that trust registries can facilitate a more efficient and trustworthy credential verification process. By leveraging the publicly resolvable and widely supported DNS/DNSSEC infrastructure, verifiers can easily validate not only the integrity of the credential they are presented with but also quickly associate the issuer of that credential with a domain name and organization, as well as their authority and trustworthiness by confirming their membership in a trust registry.
 
-This process allows for secure and decentralized verification of digital credentials in a manner that is transparent and auditable. It provides individuals with greater control over their personal data while also enabling organizations to verify identity claims in a trustworthy manner.
+The use case involves an individual or an organization receiving a verifiable credential [AnonCreds](https://hyperledger.github.io/anoncreds-spec/) [W3C](https://www.w3.org/TR/vc-data-model/) from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it on a distributed ledger to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, verifying the issuer's domain name and public key through DNS queries using URI and TLSA records, and finally verifying the issuer through a trust registry rooted in the DNS using URI and TLSA records, while ensuring all these DNS records are properly signed and validated with DNSSEC.
+
+This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosytems and implementations by rooting itself in the DNS.
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
 # Terminology
-
-- Issuer: TODO - add definition
-- Verifier: TODO - add definition
+- Issuer: The source of credentials—every credential has an issuer. Most are organizations such as government agencies (passports), financial institutions (credit cards), universities (degrees), corporations (employment IDs), churches (awards), etc. However, individuals can also be issuers.
+- Verifier: Can be anyone seeking trust assurance of some kind about the holder of a credential. Verifiers request the credentials they need and then follow their own policy to verify their authenticity and validity. For example, a TSA agent at an airport will look for specific features of a passport or driver’s license to see if it is valid, then check to ensure it is not expired.
 - Trust Registry: TODO - add definition
-
-# Goal
-
-The memo aims to improve global interoperability between different decentralized digital identity ecosystems by ensuring that issuers and digital credentials have unique identifiers globally. The memo also aims to demonstrate that a Trust Registry can enable global interoperability by providing a layer of digital trust in the use of digital credentials and demonstrate that Trust Registries can enable a more efficient and trustworthy credential verification process. By leveraging the publicly resolvable and widely supported DNS/DNSSEC infrastructure, verifiers can easily validate not only the integrity of the credential they are presented with but also quickly associate the issuer of that credential with a domain name and organization, as well as their authority and trustworthiness by confirming their membership in a Trust Registry.
 
 # Mapping a DID to the DNS
 
@@ -108,7 +105,7 @@ When public keys related to DIDs are published in the DNS as TLSA records:
 
 ## Issuer Handles
 
-As mentioned in section 4.2, an Issuer may have multiple sub entities issuing credentials on their behalf, likely with their own set/s of keypairs. Because these keypairs will need to be registered in a trust registry, and represented in the DNS as TLSA records, the use of an Issuer Handle as outlined in section 4.2 will facilitate the distinction of the different public keys in their relation to the issuer.
+As mentioned in section 4.2, an issuer may have multiple sub entities issuing credentials on their behalf, likely with their own set/s of keypairs. Because these keypairs will need to be registered in a trust registry, and represented in the DNS as TLSA records, the use of an issuer Handle as outlined in section 4.2 will facilitate the distinction of the different public keys in their relation to the issuer.
 
 **Ex: _did.diplomas.university-issuer.ca IN TLSA 3 0 0 “4e18ac22c00fb9 b96270a7b2”**
 
@@ -116,9 +113,9 @@ As mentioned in section 4.2, an Issuer may have multiple sub entities issuing cr
 
 ## Instances of Multiple Key Pairs
 
-Depending on the needs of the Issuer, it is possible they may use multiple keypairs associated with a single DID to sign and issue credentials. In this case a mechanism to differentiate which verificationMethod the public key is related to will need to be added to the name of the TLSA RRset.
+Depending on the needs of the issuer, it is possible they may use multiple keypairs associated with a single DID to sign and issue credentials. In this case a mechanism to differentiate which verificationMethod the public key is related to will need to be added to the name of the TLSA RRset.
 
-A simple solution would be to create a standardized naming convention by expanding the RRset name using the fragment fragment of the target verificationMethod.
+A simple solution would be to create a standardized naming convention by expanding the RRset name using the fragment of the target verificationMethod's ID.
 
 **Ex: _did.key-1.example-issuer.ca IN TLSA 3 0 0 ‘someHexKey’**
 
@@ -126,27 +123,27 @@ A simple solution would be to create a standardized naming convention by expandi
 
 ## Benefits of Public Keys in the DNS
 
-Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding [verificationMethod](https://www.w3.org/TR/did-core/#verification-methods) in the DID document. The accessibility of the public keys is also a benefit, as the verifier only needs to resolve the DID document on the distributed ledger and can perform the remainder of the verification process using data available in the DNS, potentially limiting the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions for key access.
+Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding [verificationMethod](https://www.w3.org/TR/did-core/#verification-methods) in the DID document. The accessibility of the public keys is also benificial, as the verifier only needs to resolve the DID document on the distributed ledger and can perform the remainder of the cryptographic verification process using data available in the DNS, potentially limiting the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions for key access.
 
 # Digital Credential Verification using DIDs and the DNS
 
 By leveraging the records and relationships outlined above, the verifier can verify a digital credential claim by:
 
-- Looking up the credential’s Issuer’s DID on a distributed ledger to resolve a DID document.
-- Extracting the Issuer’s domain from that DID document.
-- Querying that domain for a _did URI record to confirm the Issuer’s domain is also claiming ownership over that DID.
+- Looking up the credential’s issuer’s DID on a distributed ledger to resolve a DID document.
+- Extracting the issuer’s domain from that DID document.
+- Querying that domain for a _did URI record to confirm the issuer’s domain is also claiming ownership over that DID.
 - Performing a verification of the credential’s signature/proof using the relevant verificationMethod in the DID document.
-- Querying that domain for a _did TLSA record to confirm the public key expressed by the verificationMethod is also expressed by the Issuer’s domain.
+- Querying that domain for a _did TLSA record to confirm the public key expressed by the verificationMethod is also expressed by the issuer’s domain.
 
 Through this process, the Verifier has not only cryptographically verified the credential they are being presented with, but also associated the issuing DID to a publicly resolvable domain, confirming it’s validity both semantically and cryptographically.
 
 # Role of DNSSEC for Assurance and Revocation
 
-It is a MUST that all the participants in this digital identity ecosystem to enable DNSSEC signing for all the DNS instance they operate align with DNSSEC validation. See [RFC 9364 - DNS Security Extensions (DNSSEC)](https://datatracker.ietf.org/doc/html/rfc9364)
+It is a MUST that all the participants in this digital identity ecosystem enable DNSSEC signing for all the DNS instances they operate. See [RFC 9364 - DNS Security Extensions (DNSSEC)](https://datatracker.ietf.org/doc/html/rfc9364)
 
 DNSSEC provides cryptographic assurance that the DNS records returned in response to a query are authentic and have not been tampered with. This assurance within the context of the _did URI and _did TLSA records provides another mechanism to ensure the integrity of the DID and its public keys outside of the distributed ledger it resides on directly from the domain of its owner.
 
-Within this use-case, DNSSEC also provides revocation checks for both DIDs and public keys.. In particular, a DNS query for a specific _did URI record or _did TLSA record can return an [NXDOMAIN](https://www.rfc-editor.org/rfc/rfc8020) response if the DID or public key has been revoked.  This approach can simplify the process of verifying the validity of DIDs and public keys by reducing the need for complex revocation mechanisms.
+Within this use-case, DNSSEC also provides revocation checks for both DIDs and public keys. In particular, a DNS query for a specific _did URI record or _did TLSA record can return an [NXDOMAIN](https://www.rfc-editor.org/rfc/rfc8020) response if the DID or public key has been revoked.  This approach can simplify the process of verifying the validity of DIDs and public keys by reducing the need for complex revocation mechanisms or implementation specific technologies.
 
 # The Role of Trust Registries in Bidirectional Credential Verification
 
@@ -155,46 +152,60 @@ A trust registry is a decentralized system that enables the verification of the 
 When an entity is presented with a verifiable claim, there are three things they will want to ensure:
 
 1. That a claim hasn’t been altered/falsified at any point in time, via cryptographic verifiability and Verifiable Data Registries (VDRs).
-2. That a claim has accurate representation via authentication, DID Discovery & mapping within DNS as described above.
-3. That a claim has authority, that is does the Issuer have authority in its issuance of credentials, Via the use of Trust Registries (trust lists)
+2. That a claim has accurate representation via authentication, via DID Discovery & mapping within DNS as described above.
+3. That a claim has authority, or in other words, does the issuer have authority in its issuance of credentials, via the use of trust registries (trust lists)
 
-Trust Registry enables the verification of the authority of an issuer and its claim.  The role of a Trust Registry within the context of this document is to confirm the authenticity and trustworthiness of the Issuer to the Verifier after they have validated the digital credential using the mechanisms described previously. This involves the Trust Registry taking on the role of a trust anchor, providing input for the Verifier’s ultimate trust decision regarding the credential they are being presented with. The assumption is made that the Trust Registry would be operated under the authority of an institution or organization such that their claims and input to the trust decision would be considered significant or definitive. An example of such an organization would be a government entity in relation to the issuance of a Driver’s licenses.
+Trust registries enables the verification of the authority of an issuer and by extent their credentials. The role of a trust registry within the context of this document is to confirm the authenticity and trustworthiness of the issuer to the verifier after they have validated the digital credential using the mechanisms described previously. This involves the trust registry taking on the role of a trust anchor, providing input for the verifier’s ultimate trust decision regarding the credential they are being presented with. The assumption is made that the trust registry would be operated under the authority of an institution or organization such that their claims and input to the trust decision would be considered significant or definitive. An example of such an organization would be a government entity in relation to the issuance of a Driver’s license.
 
-It is important to note that the DNS based Trust Registry mechanism described in this section is not meant to operate in place of an alternative implementation but provide an easy to implement and use mechanism to extend such a solution.
+It is important to note that the DNS based trust registry mechanism described in this section is not meant to operate in place of an alternative implementation but provide an easy to implement and use mechanism to extend such a solution.
 
-This section also does not describe the process of the Trust Registry’s verification of an Issuer, or the process of how an Issuer would become accredited by or join a Trust Registry.
+This section also does not describe the process of the trust registry’s verification of an issuer, or the process of how an issuer would become accredited by or join a trust registry.
 
 ## Issuer's Membership Claim in a Trust Registry
 
-Once the Verifier has successfully completed the credential verification process outlined in section 6, they have definitive proof that the credential they are being presented with was issued by the claimed issuer, and that issuer can be resolved to an organization’s or entity’s domain. However, this process does not provide definitive proof the Issuer is to be trusted or has the authority to issue such a credential. The Issuer, through use of URI records and the _trustregistry label, can assert the claim that they are a member of a Trust Registry.
+Once the verifier has successfully completed the credential verification process outlined in section 6, they have definitive proof that the credential they are being presented with was issued by the claimed issuer, and that issuer can be resolved to an organization’s or entity’s domain. However, this process does not provide definitive proof the issuer is to be trusted or has the authority to issue such a credential. The issuer, through use of URI records and the _trustregistry label, can assert the claim that they are a member of a trust registry.
 
 **Ex: _trustregistry.example-issuer.ca IN URI 0 1 “example-trustregistry.ca”**
 
-This record indicates the Verifier can then query the “example-trustregistry.ca” for further URI and TLSA records proving “example-issuer.ca”s membership.
+This record indicates the verifier can then query the “example-trustregistry.ca” for further URI and TLSA records proving “example-issuer.ca”s membership.
 
 ### URI Record Name Scoping
 
-When Trust Registry membership claims are published in the DNS
+When trust registry membership claims are published in the DNS
 
 - The records MUST be scoped by setting the global (highest-level) underscore name of the URI RRset to ‘_trustregistry’ (0x5F 0x74 0x72 0x75 0x73 0x74 0x72 0x65 0x67 0x69 0x73 0x74 0x72 0x79)
 
 ## Trust Registry Membership Proof
 
-The Trust Registry can assert an Issuer’s membership using TLSA records in a similar fashion to the methods outlined by section 5.1.
+The Trust Registry can assert an issuer's membership using TLSA records in a similar fashion to the methods outlined by section 5.1.
 
 **Ex: _example-issuer.ca._trustregistration.example-trustregistry.ca in TLSA 3 0 0 “SomeHexKey”**
 
-Note that the first component of the URI is the Issuer’s domain, followed by the _trustregistration label. This combination indicates that the domain expressed is registered by this trust registry as per its governance model, and this is their public key. This association created by the TLSA record effectively has created a chain of trust, beginning at the DID’s verificationMethod, continuing to the Issuer’s domain, and finally resolving at the Trust Registry.
+Note that the first component of the URI is the issuer’s domain, followed by the _trustregistration label. This combination indicates that the domain expressed is registered by this trust registry as per its governance model, and this is their public key. This association created by the TLSA record effectively has created a chain of trust, beginning at the DID’s verificationMethod, continuing to the issuer’s domain, and finally resolving at the Trust Registry.
 
 # Security Considerations
 
 TODO Security
 
-
 # IANA Considerations
 
 This document has no IANA actions.
 
+# References
+
+DIACC – TR Document
+
+- Trust Over IP (ToIP) working group
+- [ToIP Trust Registry Specification V1](https://github.com/trustoverip/tswg-trust-registry-tf/blob/main/v1/docs/ToIP%20Trust%20Registry%20V1%20Specification.md)
+
+Pan-Canadian Trust Framework
+
+- PCTF Trust Registries Draft Recommendation V1.0 DIACC / PCTF13 
+- [PCTF Trust Registries Component Overview Discussion Draft V0.02](https://diacc.ca/wp-content/uploads/2023/03/PCTF-Trust-Registries-Component-Overview_Draft-Recomendation-V1.0.pdf)
+
+Decentralized Identity Foundation (DIF) Credentials Working Group
+
+- [https://trustoverip.github.io/essiflab/glossary](https://essif-lab.eu )
 
 --- back
 
