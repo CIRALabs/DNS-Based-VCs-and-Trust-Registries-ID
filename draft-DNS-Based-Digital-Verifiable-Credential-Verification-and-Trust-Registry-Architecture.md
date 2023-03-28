@@ -200,7 +200,7 @@ DIACC – TR Document
 
 Pan-Canadian Trust Framework
 
-- PCTF Trust Registries Draft Recommendation V1.0 DIACC / PCTF13 
+- PCTF Trust Registries Draft Recommendation V1.0 DIACC / PCTF13
 - [PCTF Trust Registries Component Overview Discussion Draft V0.02](https://diacc.ca/wp-content/uploads/2023/03/PCTF-Trust-Registries-Component-Overview_Draft-Recomendation-V1.0.pdf)
 
 Decentralized Identity Foundation (DIF) Credentials Working Group
