@@ -27,7 +27,7 @@ author:
     fullname: J.Carter
     organization: CIRA
  -
-    fullname: J.Latour
+    fullname: Jacques Latour
     organization: CIRA
  -
     fullname: M.Glaude
