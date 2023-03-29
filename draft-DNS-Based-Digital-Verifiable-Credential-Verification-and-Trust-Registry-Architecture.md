@@ -27,8 +27,9 @@ author:
     fullname: J.Carter
     organization: CIRA
  -
-    fullname: J.Latour
+    fullname: Jacques Latour
     organization: CIRA
+    email: jacques.latour@cira.ca
  -
     fullname: M.Glaude
     organization: NorthernBlock
