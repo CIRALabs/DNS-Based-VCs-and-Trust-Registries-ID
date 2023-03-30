@@ -24,15 +24,17 @@ venue:
 
 author:
  -
-    fullname: J.Carter
+    fullname: Jesse Carter
     organization: CIRA
+    emai: jesse.carter@cira.ca
  -
     fullname: Jacques Latour
     organization: CIRA
     email: jacques.latour@cira.ca
  -
-    fullname: M.Glaude
+    fullname: Mathieu Glaude
     organization: NorthernBlock
+    email: mathieu@northernblock.io
 
 normative:
 
@@ -61,7 +63,8 @@ This process allows for the secure and decentralized verification of digital cre
 # Terminology
 - Issuer: The source of credentials—every credential has an issuer. Most are organizations such as government agencies (passports), financial institutions (credit cards), universities (degrees), corporations (employment IDs), churches (awards), etc. However, individuals can also be issuers.
 - Verifier: Can be anyone seeking trust assurance of some kind about the holder of a credential. Verifiers request the credentials they need and then follow their own policy to verify their authenticity and validity. For example, a TSA agent at an airport will look for specific features of a passport or driver’s license to see if it is valid, then check to ensure it is not expired.
-- Trust Registry: TODO - add definition
+- Trust Registry: Trust registries are services that help determine the authenticity and authorization of entities in an ecosystem governance framework. They allow governing authorities to specify what actions are authorized for governed parties and enable checking if an issuer is authorized to issue a particular credential type. Essentially, trust registries serve as a trusted source for verifying the legitimacy of credential issuers, wallet apps, and verifiers.
+- Digital Wallet: A digital wallet, in the context of digital identity, is a secure platform or application that stores and manages an individual's personal identification and authentication credentials, such as government-issued IDs, passports, driver's licenses, and biometric data in the form of verifiable credentials.
 
 # Mapping a DID to the DNS
 
@@ -73,7 +76,7 @@ Services: Alternatively, [services](https://www.w3.org/TR/did-core/#services) ar
 
 However, this association stemming only from the DID is unidirectional. By leveraging URI records as outlined in [DID in the DNS](https://datatracker.ietf.org/doc/html/draft-mayrhofer-did-dns-05#section-2), we can create a bidirectional relationship, allowing a domain to publish their associated DIDs in the DNS.
 
-**Ex: _did.example-issuer.ca IN URI 1 0 “did:sov:123456”**
+***Ex: _did.example-issuer.ca IN URI 1 0 “did:sov:123456”***
 
 This relationship enhances security, as an entity would require control over both the DID and the domain’s DNS server to create this bidirectional association, reducing the likelihood of malicious impersonation.
 
@@ -87,9 +90,9 @@ The ability for an organization to publish a list of their DIDs on the DNS is al
 
 An issuer may have multiple sub entities issuing credentials on their behalf, such as the different faculties in a university issuing diplomas. Each of these entities will need to be registered separately in a trust registry and will likely have one or more DIDs of their own. For this reason, the introduction of an issuer handle, represented as a subdomain in the resource record name, provides a simple way to facilitate the distinction of DIDs, their public keys, and credentials they issue in their relationship to the issuer.
 
-**Ex: _did.diplomas.university-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”**
+***Ex: _did.diplomas.university-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”***
 
-**Ex: _did.certificates. university -issuer.ca IN URI 1 0 “did:sov:YYYYYYY”**
+***Ex: _did.certificates. university -issuer.ca IN URI 1 0 “did:sov:YYYYYYY”***
 
 # DID Public Keys in the DNS
 
@@ -108,9 +111,9 @@ When public keys related to DIDs are published in the DNS as TLSA records:
 
 As mentioned in section 4.2, an issuer may have multiple sub entities issuing credentials on their behalf, likely with their own set/s of keypairs. Because these keypairs will need to be registered in a trust registry, and represented in the DNS as TLSA records, the use of an issuer Handle as outlined in section 4.2 will facilitate the distinction of the different public keys in their relation to the issuer.
 
-**Ex: _did.diplomas.university-issuer.ca IN TLSA 3 0 0 “4e18ac22c00fb9 b96270a7b2”**
+***Ex: _did.diplomas.university-issuer.ca IN TLSA 3 0 0 “4e18ac22c00fb9b96270a7b2”**
 
-**Ex: _did.certificates. university -issuer.ca IN TLSA 3 0 0 “4e18ac22c00fb9 b96270a7b3”**
+***Ex: _did.certificates. university -issuer.ca IN TLSA 3 0 0 “4e18ac22c00fb9b96270a7b3”***
 
 ## Instances of Multiple Key Pairs
 
@@ -118,9 +121,9 @@ Depending on the needs of the issuer, it is possible they may use multiple keypa
 
 A simple solution would be to create a standardized naming convention by expanding the RRset name using the fragment of the target verificationMethod's ID.
 
-**Ex: _did.key-1.example-issuer.ca IN TLSA 3 0 0 ‘someHexKey’**
+***Ex: _did.key-1.example-issuer.ca IN TLSA 3 0 0 4e18ac22c00fb9b96270a7b4***
 
-**Ex: _did.key-2.example-issuer.ca in TLSA 3 0 0 ‘anotherHexKey’**
+***Ex: _did.key-2.example-issuer.ca in TLSA 3 0 0 ‘4e18ac22c00fb9b96270a7b5’***
 
 ## Benefits of Public Keys in the DNS
 
