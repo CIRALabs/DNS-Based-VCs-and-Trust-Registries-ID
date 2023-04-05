@@ -22,12 +22,51 @@ venue:
   latest: "https://CIRALabs.github.io/DNS-Based-VCs-and-Trust-Registries-ID/draft-DNS-Based-Digital-Verifiable-Credential-Verification-and-Trust-Registry-Architecture.html"
 
 informative:
+   ToIP Trust Registry Specification:
+      title: "ToIP Trust Registry Protocol V1 Specification"
+      author:
+         - org: Trust Over IP (ToIP) Working Group
+      target: https://github.com/trustoverip/tswg-trust-registry-tf/blob/main/v1/docs/ToIP%20Trust%20Registry%20V1%20Specification.md
+   Pan-Canadian Trust Framework:
+      title: "PCTF Trust Registries Draft Recommendation V1.0 DIACC / PCTF13"
+      author:
+         - org: DIACC
+      target: https://diacc.ca/wp-content/uploads/2023/03/PCTF-Trust-Registries-Component-Overview_Draft-Recomendation-V1.0.pdf
+   Self-Sovereign Identity:
+      title: "Self-Sovereign Identity"
+      author:
+        -
+          ins: D. Reed
+          name: Drummond Reed
+        -
+          ins: A. Preukschat
+          name: Alex Preukschat
+      seriesinfo:
+         ISBN: 9781617296598
+      date: 2021
+
 normative:
    DID-Specification-Registries:
       title: "DID Specification Registries"
-      author:
-        - org: W3C
       target: https://www.w3.org/TR/did-spec-registries/#did-methods
+   AnonCreds:
+      title: "AnonCreds Specification"
+      target: https://hyperledger.github.io/anoncreds-spec/
+   W3C-VC-Data-Model:
+      title: "Verifiable Credentials Data Model v1.1"
+      target: https://www.w3.org/TR/vc-data-model/
+   alsoKnownAs:
+      title: "Decentralized Identifiers (DIDs) v1.0"
+      target: https://www.w3.org/TR/did-core/#also-known-as
+   services:
+      title: "Decentralized Identifiers (DIDs) v1.0"
+      target: https://www.w3.org/TR/did-core/#services
+   DID-in-the-DNS:
+      title: "The Decentralized Identifier (DID) in the DNS"
+      target: https://datatracker.ietf.org/doc/html/draft-mayrhofer-did-dns-05#section-2
+   verificationMethod:
+      title: "Decentralized Identifiers (DIDs) v1.0"
+      target: https://www.w3.org/TR/did-core/#verification-methods
 
 author:
 -
@@ -58,7 +97,7 @@ With the increasing adoption and deployment of digital credentials around the wo
 
 This memo aims to improve global interoperability between different decentralized digital identity ecosystems by ensuring that public DID owners (i.e. credential issuers and sometimes verifiers) have unique and accessible global identifiers. The memo also aims to demonstrate how trust registries can enable global interoperability by providing a layer of digital trust in the use of digital credentials, demonstrating that trust registries can facilitate a more efficient and trustworthy credential verification process. By leveraging the publicly resolvable and widely supported DNS/DNSSEC infrastructure, entities looking to make a trust decision can easily validate not only the integrity of the credential they are presented with, but also quickly associate the another entity in question with a domain name and organization, as well as their authority and trustworthiness by confirming their membership in a trust registry. We will explore how this implementation can present a more decentralized approach to making trust decisions, without having to integrate directly to all trust registries, but instead letting entities involved in private transactions leverage existing internet infrastructure to facilitate their own trust decisions.
 
-We will focus this memo around a use case involving an individual or an organization receiving a verifiable credential [AnonCreds](https://hyperledger.github.io/anoncreds-spec/) [W3C](https://www.w3.org/TR/vc-data-model/) from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it on a distributed ledger (Indy ledger) to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, verifying the issuer's domain name and public key through DNS queries using URI and TLSA records, and finally verifying the issuer through a trust registry grounded in the DNS using URI and TLSA records, while ensuring all these DNS records are properly signed and validated with DNSSEC.
+We will focus this memo around a use case involving an individual or an organization receiving a verifiable credential {{AnonCreds}} {{W3C-VC-Data-Model}} from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it on a distributed ledger (Indy ledger) to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, verifying the issuer's domain name and public key through DNS queries using URI and TLSA records, and finally verifying the issuer through a trust registry grounded in the DNS using URI and TLSA records, while ensuring all these DNS records are properly signed and validated with DNSSEC.
 
 This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.
 
@@ -80,11 +119,11 @@ This process allows for the secure and decentralized verification of digital cre
 
 The W3C DID Core spec supports multiple ways of associating a DID to a domain.
 
-alsoKnownAs: The assertion that two or more DIDs (or other types of URI, such as a domain name) refer to the same DID subject can be made using the [alsoKnownAs](https://www.w3.org/TR/did-core/#also-known-as) property.
+alsoKnownAs: The assertion that two or more DIDs (or other types of URI, such as a domain name) refer to the same DID subject can be made using the {{alsoKnownAs}} property.
 
-Services: Alternatively, [services](https://www.w3.org/TR/did-core/#services) are used in DID documents to express ways of communicating with the DID subject or associated entities. In this case we are referring specifically to the "LinkedDomains" service type.
+Services: Alternatively, {{services}} are used in DID documents to express ways of communicating with the DID subject or associated entities. In this case we are referring specifically to the "LinkedDomains" service type.
 
-However, this association stemming only from the DID is unidirectional. By leveraging URI records as outlined in [DID in the DNS](https://datatracker.ietf.org/doc/html/draft-mayrhofer-did-dns-05#section-2), we can create a bidirectional relationship, allowing a domain to publish their associated DIDs in the DNS.
+However, this association stemming only from the DID is unidirectional. By leveraging URI records as outlined in {{DID-in-the-DNS}}, we can create a bidirectional relationship, allowing a domain to publish their associated DIDs in the DNS.
 
 ***Ex: _did.example-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”***
 
@@ -108,14 +147,14 @@ An issuer may have multiple sub entities issuing credentials on their behalf, su
 
 The DID to DNS mapping illustrated in section 4 provides a way of showing the association between a DID and a domain, but no way of verifying that relationship. By hosting the public keys of that DID in its related domain’s zone, we can provide a cryptographic linkage to bolster this relationship while also providing access to the DID’s public keys outside of the distributed ledger where it resides, facilitating interoperability.
 
-[TLSA records](https://www.rfc-editor.org/rfc/rfc6698) provide a simple way of hosting cryptographic information in the DNS.
+{{!RFC6698}} provide a simple way of hosting cryptographic information in the DNS.
 
 ## TLSA Record Scoping, Selector Field
 
 When public keys related to DIDs are published in the DNS as TLSA records:
 
 - The records MUST be scoped by setting the global underscore name of the TLSA RRset to ‘_did’ (0x5F 0x64 0x69 0x64).
-- The Selector Field of the TLSA record must be set to 1, SubjectPublicKeyInfo: DER-encoded binary structure as defined in [RFC5280](https://www.rfc-editor.org/rfc/rfc5280).
+- The Selector Field of the TLSA record must be set to 1, SubjectPublicKeyInfo: DER-encoded binary structure as defined in {{!RFC5280}}.
 
 ## Issuer Handles
 
@@ -131,13 +170,13 @@ Depending on the needs of the issuer, it is possible they may use multiple keypa
 
 A simple solution would be to create a standardized naming convention by expanding the RRset name using the fragment of the target verificationMethod's ID.
 
-***Ex: _did.key-1.example-issuer.ca IN TLSA 3 0 0 "4e18ac22c00fb9...b96270a7b2"***
+***Ex: _did.key-1.example-issuer.ca IN TLSA 3 0 0 "4e18ac22c00fb9...b96270a7b4"***
 
-***Ex: _did.key-2.example-issuer.ca in TLSA 3 0 0 “4e18ac22c00fb9...b96270a7b3”***
+***Ex: _did.key-2.example-issuer.ca in TLSA 3 0 0 “4e18ac22c00fb9...b96270a7b5”***
 
 ## Benefits of Public Keys in the DNS
 
-Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding [verificationMethod](https://www.w3.org/TR/did-core/#verification-methods) in the DID document. The accessibility of the public keys is also beneficial, as the verifier only needs to resolve the DID document on the distributed ledger and can perform the remainder of the cryptographic verification process using data available in the DNS, potentially limiting the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions for key access.
+Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding {{verificationMethod}} in the DID document. The accessibility of the public keys is also beneficial, as the verifier only needs to resolve the DID document on the distributed ledger and can perform the remainder of the cryptographic verification process using data available in the DNS, potentially limiting the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions for key access.
 
 # Digital Credential Verification using DIDs and the DNS
 
@@ -153,11 +192,11 @@ Through this process, the Verifier has not only cryptographically verified the c
 
 # Role of DNSSEC for Assurance and Revocation
 
-It is a MUST that all the participants in this digital identity ecosystem enable DNSSEC signing for all the DNS instances they operate. See [RFC 9364 - DNS Security Extensions (DNSSEC)](https://datatracker.ietf.org/doc/html/rfc9364).
+It is a MUST that all the participants in this digital identity ecosystem enable DNSSEC signing for all the DNS instances they operate. See {{!RFC9364}}.
 
 DNSSEC provides cryptographic assurance that the DNS records returned in response to a query are authentic and have not been tampered with. This assurance within the context of the _did URI and _did TLSA records provides another mechanism to ensure the integrity of the DID and its public keys outside of the distributed ledger it resides on directly from the domain of its owner.
 
-Within this use-case, DNSSEC also provides revocation checks for both DIDs and public keys. In particular, a DNS query for a specific _did URI record or _did TLSA record can return an [NXDOMAIN](https://www.rfc-editor.org/rfc/rfc8020) response if the DID or public key has been revoked. This approach can simplify the process of verifying the validity of DIDs and public keys by reducing the need for complex revocation mechanisms or implementation specific technologies.
+Within this use-case, DNSSEC also provides revocation checks for both DIDs and public keys. In particular, a DNS query for a specific _did URI record or _did TLSA record can return an {{!RFC8020}} response if the DID or public key has been revoked. This approach can simplify the process of verifying the validity of DIDs and public keys by reducing the need for complex revocation mechanisms or implementation specific technologies.
 
 # The Role of Trust Registries in Bidirectional Credential Verification
 
@@ -193,7 +232,7 @@ When trust registry membership claims are published in the DNS
 
 The Trust Registry can assert an issuer's membership using TLSA records in a similar fashion to the methods outlined by section 5.1.
 
-***Ex: _example-issuer.ca._trustregistration.example-trustregistry.ca in TLSA 3 0 0 “4e18ac22c00fb9...b96270a7b2”***
+***Ex: _example-issuer.ca._trustregistration.example-trustregistry.ca in TLSA 3 0 0 “4e18ac22c00fb9...b96270a7b6”***
 
 Note that the first component of the URI is the issuer’s domain, followed by the _trustregistration label. This combination indicates that the domain expressed is registered by this trust registry as per its governance model, and this is their public key. This association created by the TLSA record effectively has created a chain of trust, beginning at the DID’s verificationMethod, continuing to the issuer’s domain, and finally resolving at the Trust Registry.
 
