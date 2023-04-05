@@ -48,7 +48,7 @@ This memo describes an architecture for digital credential verification and vali
 
 # Introduction
 
-With the increasing adoption and deployment of digital credentials around the world, as well as the numerous different standards and implementations surrounding them, there is a strong likelihood the digital credential ecosystem will become fragmented. There all already 150+ DID Methods listed in the [DID Specification Registries](https://www.w3.org/TR/did-spec-registries/#did-methods), meaning that implementers of digital credentialing solutions would have to ensure they can support the resolution of the right DID Methods that are being used in their interactions. This will present a significant burden to implementers across different nations and organizations, creating large barriers to interoperability.
+With the increasing adoption and deployment of digital credentials around the world, as well as the numerous different standards and implementations surrounding them, there is a strong likelihood the digital credential ecosystem will become fragmented. There all already 150+ DID Methods listed in the {{!DID Specification Registries}}(https://www.w3.org/TR/did-spec-registries/#did-methods), meaning that implementers of digital credentialing solutions would have to ensure they can support the resolution of the right DID Methods that are being used in their interactions. This will present a significant burden to implementers across different nations and organizations, creating large barriers to interoperability.
 
 This memo aims to improve global interoperability between different decentralized digital identity ecosystems by ensuring that public DID owners (i.e. credential issuers and sometimes verifiers) have unique and accessible global identifiers. The memo also aims to demonstrate how trust registries can enable global interoperability by providing a layer of digital trust in the use of digital credentials, demonstrating that trust registries can facilitate a more efficient and trustworthy credential verification process. By leveraging the publicly resolvable and widely supported DNS/DNSSEC infrastructure, entities looking to make a trust decision can easily validate not only the integrity of the credential they are presented with, but also quickly associate the another entity in question with a domain name and organization, as well as their authority and trustworthiness by confirming their membership in a trust registry. We will explore how this implementation can present a more decentralized approach to making trust decisions, without having to integrate directly to all trust registries, but instead letting entities involved in private transactions leverage existing internet infrastructure to facilitate their own trust decisions.
 
@@ -199,6 +199,8 @@ TODO Security
 
 This document has no IANA actions.
 
+--- back
+
 # References
 
 DIACC – TR Document
@@ -214,8 +216,6 @@ Pan-Canadian Trust Framework
 Decentralized Identity Foundation (DIF) Credentials Working Group
 
 - [https://trustoverip.github.io/essiflab/glossary](https://essif-lab.eu )
-
---- back
 
 # Acknowledgments
 {:numbered="false"}
