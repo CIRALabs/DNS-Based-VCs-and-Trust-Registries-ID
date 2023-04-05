@@ -17,7 +17,7 @@
 /versioned/
 Gemfile.lock
 archive.json
-draft-DNS-Based-Digital-Verifiable-Credential-Verification-and-Trust-Registry-Architecture.xml
+draft-latour-dns-and-digital-trust.xml
 package-lock.json
 report.xml
 !requirements.txt
