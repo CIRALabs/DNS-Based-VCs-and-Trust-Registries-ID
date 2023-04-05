@@ -24,15 +24,15 @@ venue:
 
 author:
  -
-    fullname: J.Carter
+    fullname: Jesse Carter
     organization: CIRA
     email: jesse.carter@cira.ca
  -
-    fullname: J.Latour
+    fullname: Jacques Latour
     organization: CIRA
     email: jacques.latour@cira.ca
  -
-    fullname: M.Glaude
+    fullname: Mathieu Glaude
     organization: NorthernBlock
     email: mathieu@northernblock.io
 
