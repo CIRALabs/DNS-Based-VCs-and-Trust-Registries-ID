@@ -87,7 +87,7 @@ author:
 
 --- abstract
 
-This memo describes an architecture for digital credential verification and validation using Decentralized Identifiers (DIDs), distributed ledgers, trust registries, and the DNS. This architecture provides a verifier with a simple process by which to cryptographically verify the credential they are being presented with, verify and resolve the issuer of that credential to a domain, and verify that issuer's membership in a trust registry.
+This memo describes an architecture for digital credential verification and validation using Decentralized Identifiers (DIDs), distributed ledgers, trust registries, and the DNS. This architecture provides a verifier with a simple process by which to cryptographically verify the credential they are being presented with, verify and resolve the issuer of that credential to a domain, and verify that issuer's membership in a trust registry. 
 
 --- middle
 
@@ -101,6 +101,8 @@ We will focus this memo around a use case involving an individual or an organiza
 
 This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.
 
+## Note
+The standardization of the various implementations of DIDs, Verifiable Credentials, and more specifically, Trust Registries, is required to to ensure global interoperability of the diverse and emerging digital identity ecosystem.
 
 # Conventions and Definitions
 
