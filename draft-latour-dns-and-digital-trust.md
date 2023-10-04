@@ -101,6 +101,8 @@ We will focus this memo around a use case involving an individual or an organiza
 
 This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.
 
+## Note
+The standardization of the various implementations of DIDs, Verifiable Credentials, and more specifically, Trust Registries, is required to to ensure global interoperability of the diverse and emerging digital identity ecosystem.
 
 # Conventions and Definitions
 
