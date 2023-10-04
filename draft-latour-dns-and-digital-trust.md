@@ -8,7 +8,7 @@ submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
 number:
 date:
 consensus: true
-v: 0
+v: 1
 
 keyword:
 - trust registry
