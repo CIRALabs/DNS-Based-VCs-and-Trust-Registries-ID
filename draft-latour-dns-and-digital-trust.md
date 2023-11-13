@@ -99,7 +99,7 @@ This memo aims to improve global interoperability between different decentralize
 
 We will focus this memo around a use case involving an individual or an organization receiving a verifiable credential {{AnonCreds}} {{W3C-VC-Data-Model}} from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it on a distributed ledger (Indy ledger) to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, verifying the issuer's domain name and public key through DNS queries using URI and TLSA records, and finally verifying the issuer through a trust registry grounded in the DNS using URI and TLSA records, while ensuring all these DNS records are properly signed and validated with DNSSEC.
 
-This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.
+This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing independentently of and supporting the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.
 
 ## Note
 The standardization of the various implementations of DIDs, Verifiable Credentials, and more specifically, Trust Registries, is required to to ensure global interoperability of the diverse and emerging digital identity ecosystem.
@@ -127,7 +127,7 @@ The W3C DID Core spec supports multiple ways of associating a DID to a domain.
 
 However, this association stemming only from the DID is unidirectional. By leveraging URI records as outlined in {{DID-in-the-DNS}}, we can create a bidirectional relationship, allowing a domain to publish their associated DIDs in the DNS.
 
-***Ex: _did.example-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”***
+***Ex: _did.example-issuer.ca IN URI 1 0 “did:example:XXXXXXX”***
 
 This relationship enhances security, as an entity would require control over both the DID and the domain’s DNS server to create this bidirectional association, reducing the likelihood of malicious impersonation.
 
@@ -141,13 +141,13 @@ The ability for an organization to publish a list of their DIDs on the DNS is al
 
 An issuer may have multiple sub entities issuing credentials on their behalf, such as the different faculties in a university issuing diplomas. Each of these entities will need to be registered separately in a trust registry and will likely have one or more DIDs of their own. For this reason, the introduction of an issuer handle, represented as a subdomain in the resource record name, provides a simple way to facilitate the distinction of DIDs, their public keys, and credentials they issue in their relationship to the issuer.
 
-***Ex: _did.diplomas.university-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”***
+***Ex: _did.diplomas.university-issuer.ca IN URI 1 0 “did:example:XXXXXXX”***
 
-***Ex: _did.certificates.university-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”***
+***Ex: _did.certificates.university-issuer.ca IN URI 1 0 “did:example:XXXXXXX”***
 
 # DID Public Keys in the DNS
 
-The DID to DNS mapping illustrated in section 4 provides a way of showing the association between a DID and a domain, but no way of verifying that relationship. By hosting the public keys of that DID in its related domain’s zone, we can provide a cryptographic linkage to bolster this relationship while also providing access to the DID’s public keys outside of the distributed ledger where it resides, facilitating interoperability.
+The DID to DNS mapping illustrated in section 4 provides a way of showing the association between a DID and a domain, but no way of verifying that relationship. By hosting the public keys of that DID in its related domain’s zone, we can provide a cryptographic linkage to bolster this relationship while also providing access to the DID’s public keys outside of the distributed ledger where it resides, facilitating interoperability. If a verifier is presented with a credential issued or signed by a DID using a method they do not support, they would have the option to perform the cryptographic verification of the credential's signature using the public key stored in the DNS.
 
 TLSA records {{!RFC6698}} provide a simple way of hosting cryptographic information in the DNS.
 
@@ -166,6 +166,14 @@ As mentioned in section 4.2, an issuer may have multiple sub entities issuing cr
 
 ***Ex: _did.certificates.university-issuer.ca IN TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b3”***
 
+## Instances of Multiple DIDs
+
+It is also likely an issuer may be using or wish to associate multiple DIDs with a single domain or subdomain. In this case it is possible to expand the name of the RRset using both the related DID method and identifier to more clearly associate the public key and its corresponding DID. In this circumstance, we propose using another 2 additional sub names, the first following the _did global identifier denoting the method, and the second denoting the DID's id.
+
+***Ex: _did.example.1234abc.university-issuer.ca IN TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b2”***
+
+***Ex: _did.example.5678def.university-issuer.ca IN TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b3”***
+
 ## Instances of Multiple Key Pairs
 
 Depending on the needs of the issuer, it is possible they may use multiple keypairs associated with a single DID to sign and issue credentials. In this case a mechanism to differentiate which verificationMethod the public key is related to will need to be added to the name of the TLSA RRset.
@@ -178,7 +186,7 @@ A simple solution would be to create a standardized naming convention by expandi
 
 ## Benefits of Public Keys in the DNS
 
-Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding {{verificationMethod}} in the DID document. The accessibility of the public keys is also beneficial, as the verifier only needs to resolve the DID document on the distributed ledger and can perform the remainder of the cryptographic verification process using data available in the DNS, potentially limiting the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions for key access.
+Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding {{verificationMethod}} in the DID document. The accessibility of the public keys is also beneficial, as the verifier does not need to resolve the DID document on a distributed ledger system they do not support to access the key material. This limits the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions.
 
 # Digital Credential Verification using DIDs and the DNS
 
