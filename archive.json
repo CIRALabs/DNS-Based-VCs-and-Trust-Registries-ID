@@ -1,0 +1,223 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-01-11T00:14:15.725546+00:00",
+  "repo": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOJPQMD85NLLIG",
+      "title": "Changing intro",
+      "url": "https://github.com/CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID/pull/1",
+      "state": "MERGED",
+      "author": "jacqueslatour",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [
+        "jessecarter111"
+      ],
+      "labels": [],
+      "body": "added email",
+      "createdAt": "2023-03-29T14:38:45Z",
+      "updatedAt": "2023-03-29T16:09:27Z",
+      "baseRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "baseRefName": "main",
+      "baseRefOid": "108d6d8402c0a607dc7904ed04b10a4e58f120ab",
+      "headRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "headRefName": "changing-intro",
+      "headRefOid": "ec8e1592e7ddb4bc0b5db9bacdb414d2b0cddd58",
+      "closedAt": "2023-03-29T14:49:49Z",
+      "mergedAt": "2023-03-29T14:49:49Z",
+      "mergedBy": "jacqueslatour",
+      "mergeCommit": {
+        "oid": "bdf9555881007c0e4c2f949f4aecf54c960c6b6b"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJPQMD85RQjLa",
+          "commit": {
+            "abbreviatedOid": "7ec7b5c"
+          },
+          "author": "jessecarter111",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-03-29T14:41:21Z",
+          "updatedAt": "2023-03-29T14:41:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOJPQMD85NMT8w",
+      "title": "Added definition for TR anddigital wallet",
+      "url": "https://github.com/CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID/pull/2",
+      "state": "MERGED",
+      "author": "jessecarter111",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-03-29T18:12:28Z",
+      "updatedAt": "2023-04-05T15:35:46Z",
+      "baseRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "baseRefName": "main",
+      "baseRefOid": "bdf9555881007c0e4c2f949f4aecf54c960c6b6b",
+      "headRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "headRefName": "updating-tr-definition",
+      "headRefOid": "5b464a9c3e453ecb28e4c10771ac8aa5e028e3fb",
+      "closedAt": "2023-03-30T20:14:03Z",
+      "mergedAt": "2023-03-30T20:14:03Z",
+      "mergedBy": "jacqueslatour",
+      "mergeCommit": {
+        "oid": "b0daf41285373a1c083b5ac57cb5f77f3a2e3ec0"
+      },
+      "comments": [
+        {
+          "author": "mathieuglaude",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> \r\n\r\nJesse and I are meeting tomorrow morning to walk through this and make some minor corrections.",
+          "createdAt": "2023-03-30T20:12:39Z",
+          "updatedAt": "2023-03-30T20:12:39Z"
+        },
+        {
+          "author": "jacqueslatour",
+          "authorAssociation": "COLLABORATOR",
+          "body": "how do I undo my do? ;) LOL",
+          "createdAt": "2023-03-30T21:00:30Z",
+          "updatedAt": "2023-03-30T21:00:30Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJPQMD85RaUdb",
+          "commit": {
+            "abbreviatedOid": "5b464a9"
+          },
+          "author": "jacqueslatour",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Looks good, this smells like a v1 to me :)",
+          "createdAt": "2023-03-30T20:11:00Z",
+          "updatedAt": "2023-03-30T20:11:00Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOJPQMD85RaVMc",
+          "commit": {
+            "abbreviatedOid": "5b464a9"
+          },
+          "author": "jacqueslatour",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-03-30T20:13:20Z",
+          "updatedAt": "2023-03-30T20:13:20Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOJPQMD85b6C0S",
+      "title": "Updated with small note",
+      "url": "https://github.com/CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID/pull/3",
+      "state": "MERGED",
+      "author": "jessecarter111",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-04T14:19:57Z",
+      "updatedAt": "2023-10-04T14:23:59Z",
+      "baseRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "baseRefName": "main",
+      "baseRefOid": "8540f2fc7d6d3d83eb899da9e4bda64b7ca8e98b",
+      "headRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "headRefName": "v2-edits",
+      "headRefOid": "cee41b46e3b1d3815393a8cda539b041b39ff929",
+      "closedAt": "2023-10-04T14:23:53Z",
+      "mergedAt": "2023-10-04T14:23:53Z",
+      "mergedBy": "jessecarter111",
+      "mergeCommit": {
+        "oid": "30532cae76182ce8614de2385ca23197998c67de"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOJPQMD85f8YO3",
+      "title": "Adding recent updates",
+      "url": "https://github.com/CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID/pull/4",
+      "state": "OPEN",
+      "author": "jessecarter111",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-20T19:02:54Z",
+      "updatedAt": "2023-11-20T19:02:55Z",
+      "baseRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "baseRefName": "main",
+      "baseRefOid": "30532cae76182ce8614de2385ca23197998c67de",
+      "headRepository": "CIRALabs/DNS-Based-VCs-and-Trust-Registries-ID",
+      "headRefName": "v2.0",
+      "headRefOid": "27db3142aafa47c7c6035e99fffb3abe88684c33",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
