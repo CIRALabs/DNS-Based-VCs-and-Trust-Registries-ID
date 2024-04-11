@@ -9,9 +9,9 @@
 <meta content="Jacques Latour" name="author">
 <meta content="Mathieu Glaude" name="author">
 <meta content="
-       This memo describes an architecture for digital credential verification and validation using Decentralized Identifiers (DIDs), distributed ledgers, trust registries, and the DNS. This architecture provides a verifier with a simple process by which to cryptographically verify the credential they are being presented with, verify and resolve the issuer of that credential to a domain, and verify that issuer's membership in a trust registry. 
+       This memo describes an architecture for trust registry membership association and verification using Decentralized Identifiers (DIDs), trust registries, and the DNS. This architecture provides a verifier with a simple process by which to determine and verify an issuer's membership in a trust registry. 
     " name="description">
-<meta content="xml2rfc 3.18.1" name="generator">
+<meta content="xml2rfc 3.20.1" name="generator">
 <meta content="trust registry" name="keyword">
 <meta content="distributed ledger" name="keyword">
 <meta content="did" name="keyword">
@@ -19,20 +19,20 @@
 <meta content="dns" name="keyword">
 <meta content="draft-latour-dns-and-digital-trust-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.18.1
-    Python 3.11.5
-    ConfigArgParse 1.5.3
+  xml2rfc 3.20.1
+    Python 3.11.8
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.11.0
+    platformdirs 4.2.0
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.8
+    wcwidth 0.2.13
 -->
 <link href="draft-latour-dns-and-digital-trust.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1031,11 +1031,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">TODO - Abbreviation</td>
-<td class="right">October 2023</td>
+<td class="right">April 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Carter, et al.</td>
-<td class="center">Expires 6 April 2024</td>
+<td class="center">Expires 13 October 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1048,12 +1048,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-latour-dns-and-digital-trust-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-10-04" class="published">4 October 2023</time>
+<time datetime="2024-04-11" class="published">11 April 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-04-06">6 April 2024</time></dd>
+<dd class="expires"><time datetime="2024-10-13">13 October 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1074,7 +1074,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Leveraging DNS in Digital Trust: Credential Exchanges and Trust Registries</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This memo describes an architecture for digital credential verification and validation using Decentralized Identifiers (DIDs), distributed ledgers, trust registries, and the DNS. This architecture provides a verifier with a simple process by which to cryptographically verify the credential they are being presented with, verify and resolve the issuer of that credential to a domain, and verify that issuer's membership in a trust registry.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This memo describes an architecture for trust registry membership association and verification using Decentralized Identifiers (DIDs), trust registries, and the DNS. This architecture provides a verifier with a simple process by which to determine and verify an issuer's membership in a trust registry.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1106,7 +1106,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 April 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 October 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1115,7 +1115,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1150,77 +1150,46 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-mapping-a-did-to-the-dns" class="internal xref">Mapping a DID to the DNS</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-the-role-of-trust-registrie" class="internal xref">The Role of Trust Registries in Bidirectional Credential Verification</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
-                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-uri-record-scoping" class="internal xref">URI record scoping</a></p>
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-issuers-membership-claim-in" class="internal xref">Issuer's Membership Claim in a Trust Registry</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1.2.1">
+                    <p id="section-toc.1-1.4.2.1.2.1.1"><a href="#section-4.1.1" class="auto internal xref">4.1.1</a>.  <a href="#name-uri-record-name-scoping" class="internal xref">URI Record Name Scoping</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-issuer-handles" class="internal xref">Issuer Handles</a></p>
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-trust-registry-membership-p" class="internal xref">Trust Registry Membership Proof</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-did-public-keys-in-the-dns" class="internal xref">DID Public Keys in the DNS</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-tlsa-record-scoping-selecto" class="internal xref">TLSA Record Scoping, Selector Field</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-issuer-handles-2" class="internal xref">Issuer Handles</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-instances-of-multiple-key-p" class="internal xref">Instances of Multiple Key Pairs</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-benefits-of-public-keys-in-" class="internal xref">Benefits of Public Keys in the DNS</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-role-of-dnssec-for-assuranc" class="internal xref">Role of DNSSEC for Assurance and Revocation</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-digital-credential-verifica" class="internal xref">Digital Credential Verification using DIDs and the DNS</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-role-of-dnssec-for-assuranc" class="internal xref">Role of DNSSEC for Assurance and Revocation</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-the-role-of-trust-registrie" class="internal xref">The Role of Trust Registries in Bidirectional Credential Verification</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-issuers-membership-claim-in" class="internal xref">Issuer's Membership Claim in a Trust Registry</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
-                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-uri-record-name-scoping" class="internal xref">URI Record Name Scoping</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-trust-registry-membership-p" class="internal xref">Trust Registry Membership Proof</a></p>
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-references" class="internal xref">References</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-            </ul>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1231,10 +1200,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">With the increasing adoption and deployment of digital credentials around the world, as well as the numerous different standards and implementations surrounding them, there is a strong likelihood the digital credential ecosystem will become fragmented. There all already 150+ DID Methods listed in the <span>[<a href="#DID-Specification-Registries" class="cite xref">DID-Specification-Registries</a>]</span>, meaning that implementers of digital credentialing solutions would have to ensure they can support the resolution of the right DID Methods that are being used in their interactions. This will present a significant burden to implementers across different nations and organizations, creating large barriers to interoperability.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This memo aims to improve global interoperability between different decentralized digital identity ecosystems by ensuring that public DID owners (i.e. credential issuers and sometimes verifiers) have unique and accessible global identifiers. The memo also aims to demonstrate how trust registries can enable global interoperability by providing a layer of digital trust in the use of digital credentials, demonstrating that trust registries can facilitate a more efficient and trustworthy credential verification process. By leveraging the publicly resolvable and widely supported DNS/DNSSEC infrastructure, entities looking to make a trust decision can easily validate not only the integrity of the credential they are presented with, but also quickly associate the entity in question with a domain name and organization, as well as their authority and trustworthiness by confirming their membership in a trust registry. We will explore how this implementation can present a more decentralized approach to making trust decisions, without having to integrate directly to all trust registries, but instead letting entities involved in private transactions leverage existing internet infrastructure to facilitate their own trust decisions.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">We will focus this memo around a use case involving an individual or an organization receiving a verifiable credential <span>[<a href="#AnonCreds" class="cite xref">AnonCreds</a>]</span> <span>[<a href="#W3C-VC-Data-Model" class="cite xref">W3C-VC-Data-Model</a>]</span> from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it on a distributed ledger (Indy ledger) to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, verifying the issuer's domain name and public key through DNS queries using URI and TLSA records, and finally verifying the issuer through a trust registry grounded in the DNS using URI and TLSA records, while ensuring all these DNS records are properly signed and validated with DNSSEC.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-1">This memo aims to demonstrate how trust registries can enable global interoperability by providing a layer of digital trust in the use of digital credentials, demonstrating that trust registries can facilitate a more efficient and trustworthy credential verification process. By leveraging the publicly resolvable and widely supported DNS/DNSSEC infrastructure, entities looking to make a trust decision can easily validate not only the integrity of the credential they are presented with, but also quickly associate the entity in question with a domain name and organization, as well as their authority and trustworthiness by confirming their membership in a trust registry. We will explore how this implementation can present a more decentralized approach to making trust decisions, without having to integrate directly to all trust registries, but instead letting entities involved in private transactions leverage existing internet infrastructure to facilitate their own trust decisions.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">We will focus this memo around a use case involving an individual or an organization receiving a verifiable credential <span>[<a href="#AnonCreds" class="cite xref">AnonCreds</a>]</span> <span>[<a href="#W3C-VC-Data-Model" class="cite xref">W3C-VC-Data-Model</a>]</span> from an issuer and storing it in their digital wallet. When the individual needs to provide proof of identity or other claims, they present the verifiable credential to a verifier in the form of a verifiable claim which normally includes a digital signature. The verifier then performs several steps to verify the authenticity of the credential, including extracting the issuer's DID from the credential, resolving it according to the corresponding did method to obtain the issuer's DID document, verifying the signature of the credential using the public key in the issuer's DID document, and finally verifying the issuer through a trust registry grounded in the DNS using URI and TLSA records, while ensuring all these DNS records are properly signed and validated with DNSSEC.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This process allows for the secure and decentralized verification of digital credentials in a manner that is transparent and auditable, while also existing alongside and independent of the many different decentralized identity ecosystems and implementations by grounding itself in the DNS.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <div id="note">
 <section id="section-1.1">
         <h3 id="name-note">
@@ -1283,170 +1251,44 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       </ul>
 </section>
 </div>
-<div id="mapping-a-did-to-the-dns">
-<section id="section-4">
-      <h2 id="name-mapping-a-did-to-the-dns">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-mapping-a-did-to-the-dns" class="section-name selfRef">Mapping a DID to the DNS</a>
-      </h2>
-<p id="section-4-1">The W3C DID Core spec supports multiple ways of associating a DID to a domain.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2"><strong>alsoKnownAs</strong>: The assertion that two or more DIDs (or other types of URI, such as a domain name) refer to the same DID subject can be made using the <span>[<a href="#alsoKnownAs" class="cite xref">alsoKnownAs</a>]</span> property.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3"><strong>Services</strong>: Alternatively, <span>[<a href="#services" class="cite xref">services</a>]</span> are used in DID documents to express ways of communicating with the DID subject or associated entities. In this case we are referring specifically to the "LinkedDomains" service type.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">However, this association stemming only from the DID is unidirectional. By leveraging URI records as outlined in <span>[<a href="#DID-in-the-DNS" class="cite xref">DID-in-the-DNS</a>]</span>, we can create a bidirectional relationship, allowing a domain to publish their associated DIDs in the DNS.<a href="#section-4-4" class="pilcrow">¶</a></p>
-<p id="section-4-5"><strong><em>Ex: _did.example-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”</em></strong><a href="#section-4-5" class="pilcrow">¶</a></p>
-<p id="section-4-6">This relationship enhances security, as an entity would require control over both the DID and the domain’s DNS server to create this bidirectional association, reducing the likelihood of malicious impersonation.<a href="#section-4-6" class="pilcrow">¶</a></p>
-<p id="section-4-7">The ability for an organization to publish a list of their DIDs on the DNS is also beneficial as it establishes a link between the DNS, which is ubiquitously supported, and the distributed ledger (or other places) where the DID resides on which may not have the same degree of access or support, enhancing discoverability.<a href="#section-4-7" class="pilcrow">¶</a></p>
-<div id="uri-record-scoping">
-<section id="section-4.1">
-        <h3 id="name-uri-record-scoping">
-<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-uri-record-scoping" class="section-name selfRef">URI record scoping</a>
-        </h3>
-<ul class="normal">
-<li class="normal" id="section-4.1-1.1">
-            <p id="section-4.1-1.1.1">The records <span class="bcp14">MUST</span> be scoped by setting the global underscore name of the URI RRset to <em>_did</em> (0x5F 0x64 0x69 0x64).<a href="#section-4.1-1.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-</section>
-</div>
-<div id="issuer-handles">
-<section id="section-4.2">
-        <h3 id="name-issuer-handles">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-issuer-handles" class="section-name selfRef">Issuer Handles</a>
-        </h3>
-<p id="section-4.2-1">An issuer may have multiple sub entities issuing credentials on their behalf, such as the different faculties in a university issuing diplomas. Each of these entities will need to be registered separately in a trust registry and will likely have one or more DIDs of their own. For this reason, the introduction of an issuer handle, represented as a subdomain in the resource record name, provides a simple way to facilitate the distinction of DIDs, their public keys, and credentials they issue in their relationship to the issuer.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2"><strong><em>Ex: _did.diplomas.university-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”</em></strong><a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3"><strong><em>Ex: _did.certificates.university-issuer.ca IN URI 1 0 “did:sov:XXXXXXX”</em></strong><a href="#section-4.2-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
-<div id="did-public-keys-in-the-dns">
-<section id="section-5">
-      <h2 id="name-did-public-keys-in-the-dns">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-did-public-keys-in-the-dns" class="section-name selfRef">DID Public Keys in the DNS</a>
-      </h2>
-<p id="section-5-1">The DID to DNS mapping illustrated in section 4 provides a way of showing the association between a DID and a domain, but no way of verifying that relationship. By hosting the public keys of that DID in its related domain’s zone, we can provide a cryptographic linkage to bolster this relationship while also providing access to the DID’s public keys outside of the distributed ledger where it resides, facilitating interoperability.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">TLSA records <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> provide a simple way of hosting cryptographic information in the DNS.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<div id="tlsa-record-scoping-selector-field">
-<section id="section-5.1">
-        <h3 id="name-tlsa-record-scoping-selecto">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-tlsa-record-scoping-selecto" class="section-name selfRef">TLSA Record Scoping, Selector Field</a>
-        </h3>
-<p id="section-5.1-1">When public keys related to DIDs are published in the DNS as TLSA records:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5.1-2.1">
-            <p id="section-5.1-2.1.1">The records <span class="bcp14">MUST</span> be scoped by setting the global underscore name of the TLSA RRset to <em>_did</em> (0x5F 0x64 0x69 0x64).<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">The Selector Field of the TLSA record must be set to 1, SubjectPublicKeyInfo: DER-encoded binary structure as defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-</section>
-</div>
-<div id="issuer-handles-1">
-<section id="section-5.2">
-        <h3 id="name-issuer-handles-2">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-issuer-handles-2" class="section-name selfRef">Issuer Handles</a>
-        </h3>
-<p id="section-5.2-1">As mentioned in section 4.2, an issuer may have multiple sub entities issuing credentials on their behalf, likely with their own set or sets of keypairs. Because these keypairs will need to be registered in a trust registry, and represented in the DNS as TLSA records, the use of an issuer Handle as outlined in section 4.2 will facilitate the distinction of the different public keys in their relation to the issuer.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2"><strong><em>Ex: _did.diplomas.university-issuer.ca IN TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b2”</em></strong><a href="#section-5.2-2" class="pilcrow">¶</a></p>
-<p id="section-5.2-3"><strong><em>Ex: _did.certificates.university-issuer.ca IN TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b3”</em></strong><a href="#section-5.2-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="instances-of-multiple-key-pairs">
-<section id="section-5.3">
-        <h3 id="name-instances-of-multiple-key-p">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-instances-of-multiple-key-p" class="section-name selfRef">Instances of Multiple Key Pairs</a>
-        </h3>
-<p id="section-5.3-1">Depending on the needs of the issuer, it is possible they may use multiple keypairs associated with a single DID to sign and issue credentials. In this case a mechanism to differentiate which verificationMethod the public key is related to will need to be added to the name of the TLSA RRset.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">A simple solution would be to create a standardized naming convention by expanding the RRset name using the fragment of the target verificationMethod's ID.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3"><strong><em>Ex: _did.key-1.example-issuer.ca IN TLSA 3 1 0 "4e18ac22c00fb9...b96270a7b4"</em></strong><a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<p id="section-5.3-4"><strong><em>Ex: _did.key-2.example-issuer.ca in TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b5”</em></strong><a href="#section-5.3-4" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="benefits-of-public-keys-in-the-dns">
-<section id="section-5.4">
-        <h3 id="name-benefits-of-public-keys-in-">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-benefits-of-public-keys-in-" class="section-name selfRef">Benefits of Public Keys in the DNS</a>
-        </h3>
-<p id="section-5.4-1">Hosting the public keys in TLSA records provides a stronger mechanism for the verifier to verify the issuer with, as they are able to perform a cryptographic challenge against the DID using the corresponding TLSA records, or against the domain using the corresponding <span>[<a href="#verificationMethod" class="cite xref">verificationMethod</a>]</span> in the DID document. The accessibility of the public keys is also beneficial, as the verifier only needs to resolve the DID document on the distributed ledger and can perform the remainder of the cryptographic verification process using data available in the DNS, potentially limiting the burden of having to interoperate with a multitude of different distributed ledger technologies and transactions for key access.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-</section>
-</div>
-<div id="digital-credential-verification-using-dids-and-the-dns">
-<section id="section-6">
-      <h2 id="name-digital-credential-verifica">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-digital-credential-verifica" class="section-name selfRef">Digital Credential Verification using DIDs and the DNS</a>
-      </h2>
-<p id="section-6-1">By leveraging the records and relationships outlined above, the verifier can verify a digital credential claim by:<a href="#section-6-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6-2.1">
-          <p id="section-6-2.1.1">Looking up the credential’s issuer’s DID on a distributed ledger to resolve a DID document.<a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-6-2.2">
-          <p id="section-6-2.2.1">Extracting the issuer’s domain from that DID document.<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-6-2.3">
-          <p id="section-6-2.3.1">Querying that domain for a <em>_did</em> URI record to confirm the issuer’s domain is also claiming ownership over that DID.<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-6-2.4">
-          <p id="section-6-2.4.1">Performing a verification of the credential’s signature/proof using the relevant verificationMethod in the DID document.<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-6-2.5">
-          <p id="section-6-2.5.1">Querying that domain for a <em>_did</em> TLSA record to confirm the public key expressed by the verificationMethod is also expressed by the issuer’s domain.<a href="#section-6-2.5.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-6-3">Through this process, the verifier has not only cryptographically verified the credential they are being presented with, but also associated the issuing DID to a publicly resolvable domain, confirming it’s validity both semantically and cryptographically.<a href="#section-6-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="role-of-dnssec-for-assurance-and-revocation">
-<section id="section-7">
-      <h2 id="name-role-of-dnssec-for-assuranc">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-role-of-dnssec-for-assuranc" class="section-name selfRef">Role of DNSSEC for Assurance and Revocation</a>
-      </h2>
-<p id="section-7-1">It is a <span class="bcp14">MUST</span> that all the participants in this digital identity ecosystem enable DNSSEC signing for all the DNS instances they operate. See <span>[<a href="#RFC9364" class="cite xref">RFC9364</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">DNSSEC provides cryptographic assurance that the DNS records returned in response to a query are authentic and have not been tampered with. This assurance within the context of the <em>_did</em> URI and <em>_did</em> TLSA records provides another mechanism to ensure the integrity of the DID and its public keys outside of the distributed ledger it resides on directly from the domain of its owner.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">Within this use-case, DNSSEC also provides revocation checks for both DIDs and public keys. In particular, a DNS query for a specific <em>_did</em> URI record or <em>_did</em> TLSA record can return an NXDOMAIN <span>[<a href="#RFC8020" class="cite xref">RFC8020</a>]</span> response if the DID or public key has been revoked. This approach can simplify the process of verifying the validity of DIDs and public keys by reducing the need for complex revocation mechanisms or implementation specific technologies.<a href="#section-7-3" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="the-role-of-trust-registries-in-bidirectional-credential-verification">
-<section id="section-8">
+<section id="section-4">
       <h2 id="name-the-role-of-trust-registrie">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-the-role-of-trust-registrie" class="section-name selfRef">The Role of Trust Registries in Bidirectional Credential Verification</a>
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-the-role-of-trust-registrie" class="section-name selfRef">The Role of Trust Registries in Bidirectional Credential Verification</a>
       </h2>
-<p id="section-8-1">A trust registry is a decentralized system that enables the verification of the authenticity and trustworthiness of issuers of digital credentials. Trust registries can be implemented using distributed ledger technology and leverage the DNS to provide a transparent and auditable record of issuer information.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">When an entity is presented with a verifiable claim, there are three things they will want to ensure:<a href="#section-8-2" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-8-3">
-<li id="section-8-3.1">
-          <p id="section-8-3.1.1">That a claim hasn’t been altered/falsified at any point in time, via cryptographic verifiability and Verifiable Data Registries (VDRs).<a href="#section-8-3.1.1" class="pilcrow">¶</a></p>
+<p id="section-4-1">A trust registry is a decentralized system that enables the verification of the authenticity and trustworthiness of issuers of digital credentials. Trust registries can be implemented using distributed ledger technology and leverage the DNS to provide a transparent and auditable record of issuer information.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">When an entity is presented with a verifiable claim, there are three things they will want to ensure:<a href="#section-4-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4-3">
+<li id="section-4-3.1">
+          <p id="section-4-3.1.1">That a claim hasn’t been altered/falsified at any point in time, via cryptographic verifiability and Verifiable Data Registries (VDRs).<a href="#section-4-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-8-3.2">
-          <p id="section-8-3.2.1">That a claim has accurate representation via authentication, via DID Discovery &amp; mapping within DNS as described above.<a href="#section-8-3.2.1" class="pilcrow">¶</a></p>
+        <li id="section-4-3.2">
+          <p id="section-4-3.2.1">That a claim has accurate representation via authentication, via DID Discovery &amp; mapping within DNS as described above.<a href="#section-4-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-8-3.3">
-          <p id="section-8-3.3.1">That a claim has authority, or in other words, does the issuer have authority in its issuance of credentials, via the use of trust registries (or trust lists).<a href="#section-8-3.3.1" class="pilcrow">¶</a></p>
+        <li id="section-4-3.3">
+          <p id="section-4-3.3.1">That a claim has authority, or in other words, does the issuer have authority in its issuance of credentials, via the use of trust registries (or trust lists).<a href="#section-4-3.3.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-8-4">In this memo, trust registries enable the verification of the authority of an issuer and by extent their credentials. The role of a trust registry within the context of this document is to confirm the authenticity and trustworthiness of the issuer to the verifier after they have validated the digital credential using the mechanisms described previously. This involves the trust registry taking on the role of a trust anchor for a given ecosystem, providing input for the verifier’s ultimate trust decision regarding the credential they are being presented with. The assumption is made that the trust registry would be operated under the authority of an institution or organization such that their claims and input to the trust decision would be considered significant or definitive. An example of such an organization would be a government entity in relation to the issuance of a driver’s licence.<a href="#section-8-4" class="pilcrow">¶</a></p>
-<p id="section-8-5">It is important to note that the DNS based trust registry mechanism described in this section is not meant to operate in place of an alternative implementation but provide an easy to implement and use mechanism to extend such a solution.<a href="#section-8-5" class="pilcrow">¶</a></p>
-<p id="section-8-6">This section also does not describe the process of the trust registry’s verification of an issuer, or the process of how an issuer would become accredited by or join a trust registry.<a href="#section-8-6" class="pilcrow">¶</a></p>
+<p id="section-4-4">In this memo, trust registries enable the verification of the authority of an issuer and by extent their credentials. The role of a trust registry within the context of this document is to confirm the authenticity and trustworthiness of the issuer to the verifier after they have validated the digital credential using the mechanisms described previously. This involves the trust registry taking on the role of a trust anchor for a given ecosystem, providing input for the verifier’s ultimate trust decision regarding the credential they are being presented with. The assumption is made that the trust registry would be operated under the authority of an institution or organization such that their claims and input to the trust decision would be considered significant or definitive. An example of such an organization would be a government entity in relation to the issuance of a driver’s licence.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-5">It is important to note that the DNS based trust registry mechanism described in this section is not meant to operate in place of an alternative implementation but provide an easy to implement and use mechanism to extend such a solution.<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-6">This section also does not describe the process of the trust registry’s verification of an issuer, or the process of how an issuer would become accredited by or join a trust registry.<a href="#section-4-6" class="pilcrow">¶</a></p>
 <div id="issuers-membership-claim-in-a-trust-registry">
-<section id="section-8.1">
+<section id="section-4.1">
         <h3 id="name-issuers-membership-claim-in">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-issuers-membership-claim-in" class="section-name selfRef">Issuer's Membership Claim in a Trust Registry</a>
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-issuers-membership-claim-in" class="section-name selfRef">Issuer's Membership Claim in a Trust Registry</a>
         </h3>
-<p id="section-8.1-1">Once the verifier has successfully completed the credential verification process outlined in section 6, they have definitive proof that the credential they are being presented with was issued by the claimed issuer, and that issuer can be resolved to an organization’s or entity’s domain. However, this process does not provide definitive proof the issuer is to be trusted or has the authority to issue such a credential. The issuer, through use of URI records and the <em>_trustregistry</em> label, can assert the claim that they are a member of a trust registry.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2"><strong><em>Ex: _trustregistry.example-issuer.ca IN URI 0 1 “example-trustregistry.ca”</em></strong><a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">This record indicates the verifier can query the <em>example-trustregistry.ca</em> DNS based trust registry for TLSA records containing <em>example-issuer.ca's</em> public key/s, proving their membership.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">Once a verifier has successfully completed the credential verification process, they have definitive proof that the credential they are being presented with was issued by the claimed issuer. However, this process does not provide definitive proof the issuer is to be trusted or has the authority to issue such a credential. The issuer, through use of URI records and the <em>_trustregistry</em> label, can assert the claim that they are a member of a trust registry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2"><strong><em>Ex: _trustregistry.example-issuer.ca IN URI 0 1 “example-trustregistry.ca”</em></strong><a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">This record indicates the verifier can query the <em>example-trustregistry.ca</em> DNS based trust registry for TLSA records containing <em>example-issuer.ca's</em> public key/s, proving their membership.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <div id="uri-record-name-scoping">
-<section id="section-8.1.1">
+<section id="section-4.1.1">
           <h4 id="name-uri-record-name-scoping">
-<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-uri-record-name-scoping" class="section-name selfRef">URI Record Name Scoping</a>
+<a href="#section-4.1.1" class="section-number selfRef">4.1.1. </a><a href="#name-uri-record-name-scoping" class="section-name selfRef">URI Record Name Scoping</a>
           </h4>
-<p id="section-8.1.1-1">When trust registry membership claims are published in the DNS<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-1">When trust registry membership claims are published in the DNS<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.1.1-2.1">
-              <p id="section-8.1.1-2.1.1">The records <span class="bcp14">MUST</span> be scoped by setting the global (highest-level) underscore name of the URI RRset to <em>_trustregistry</em> (0x5F 0x74 0x72 0x75 0x73 0x74 0x72 0x65 0x67 0x69 0x73 0x74 0x72 0x79)<a href="#section-8.1.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.1.1-2.1">
+              <p id="section-4.1.1-2.1.1">The records <span class="bcp14">MUST</span> be scoped by setting the global (highest-level) underscore name of the URI RRset to <em>_trustregistry</em> (0x5F 0x74 0x72 0x75 0x73 0x74 0x72 0x65 0x67 0x69 0x73 0x74 0x72 0x79)<a href="#section-4.1.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -1454,41 +1296,51 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </section>
 </div>
 <div id="trust-registry-membership-proof">
-<section id="section-8.2">
+<section id="section-4.2">
         <h3 id="name-trust-registry-membership-p">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-trust-registry-membership-p" class="section-name selfRef">Trust Registry Membership Proof</a>
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-trust-registry-membership-p" class="section-name selfRef">Trust Registry Membership Proof</a>
         </h3>
-<p id="section-8.2-1">The trust registry can assert an issuer's membership using TLSA records in a similar fashion to the methods outlined by section 5.1.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<p id="section-8.2-2"><strong><em>Ex: _example-issuer.ca._trustregistration.example-trustregistry.ca in TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b6”</em></strong><a href="#section-8.2-2" class="pilcrow">¶</a></p>
-<p id="section-8.2-3">Note that the first component of the URI is the issuer’s domain, followed by the <em>_trustregistration</em> label. This combination indicates that the domain expressed is registered by this trust registry as per its governance model, and this is their public key. This association created by the TLSA record effectively has created a chain of trust, beginning at the DID’s verificationMethod, continuing to the issuer’s domain, and finally resolving at the Trust Registry.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-1">The trust registry can assert an issuer's membership using TLSA records.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2"><strong><em>Ex: _example-issuer.ca._trustregistration.example-trustregistry.ca in TLSA 3 1 0 “4e18ac22c00fb9...b96270a7b6”</em></strong><a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">Note that the first component of the URI is the issuer’s domain, followed by the <em>_trustregistration</em> label. This combination indicates that the domain expressed is registered by this trust registry as per its governance model, and this is their public key. This association created by the TLSA record effectively has created a chain of trust, beginning at the Issuer's public key, continuing to the issuer’s domain, and finally resolving at the Trust Registry.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
+</section>
+</div>
+<div id="role-of-dnssec-for-assurance-and-revocation">
+<section id="section-5">
+      <h2 id="name-role-of-dnssec-for-assuranc">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-role-of-dnssec-for-assuranc" class="section-name selfRef">Role of DNSSEC for Assurance and Revocation</a>
+      </h2>
+<p id="section-5-1">It is a <span class="bcp14">MUST</span> that all the participants in this digital identity ecosystem enable DNSSEC signing for all the DNS instances they operate. See <span>[<a href="#RFC9364" class="cite xref">RFC9364</a>]</span>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">DNSSEC provides cryptographic assurance that the DNS records returned in response to a query are authentic and have not been tampered with. This assurance within the context of the <em>_did</em> URI and <em>_did</em> TLSA records provides another mechanism to ensure the integrity of the DID and its public keys outside of the distributed ledger it resides on directly from the domain of its owner.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">Within this use-case, DNSSEC also provides revocation checks for both DIDs and public keys. In particular, a DNS query for a specific <em>_did</em> URI record or <em>_did</em> TLSA record can return an NXDOMAIN <span>[<a href="#RFC8020" class="cite xref">RFC8020</a>]</span> response if the DID or public key has been revoked. This approach can simplify the process of verifying the validity of DIDs and public keys by reducing the need for complex revocation mechanisms or implementation specific technologies.<a href="#section-5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-9">
+<section id="section-6">
       <h2 id="name-security-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-9-1">TODO Security<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">TODO Security<a href="#section-6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-10">
+<section id="section-7">
       <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-10-1">This document has no IANA actions.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">This document has no IANA actions.<a href="#section-7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<section id="section-11">
+<section id="section-8">
       <h2 id="name-references">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-11.1">
+<section id="section-8.1">
         <h3 id="name-normative-references">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="alsoKnownAs">[alsoKnownAs]</dt>
@@ -1510,14 +1362,6 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC5280">[RFC5280]</dt>
-        <dd>
-<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5280">https://www.rfc-editor.org/rfc/rfc5280</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC6698">[RFC6698]</dt>
-        <dd>
-<span class="refAuthor">Hoffman, P.</span> and <span class="refAuthor">J. Schlyter</span>, <span class="refTitle">"The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA"</span>, <span class="seriesInfo">RFC 6698</span>, <span class="seriesInfo">DOI 10.17487/RFC6698</span>, <time datetime="2012-08" class="refDate">August 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6698">https://www.rfc-editor.org/rfc/rfc6698</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8020">[RFC8020]</dt>
         <dd>
@@ -1547,9 +1391,9 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-11.2">
+<section id="section-8.2">
         <h3 id="name-informative-references">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="Pan-Canadian_Trust_Framework">[Pan-Canadian_Trust_Framework]</dt>
